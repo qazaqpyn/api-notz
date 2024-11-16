@@ -6,6 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/qazaqpyn/api-notz/pkg/handler"
+	"github.com/qazaqpyn/api-notz/pkg/repository"
+	"github.com/qazaqpyn/api-notz/pkg/service"
 	apinotz "github.com/qazaqpyn/api-notz/server"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
