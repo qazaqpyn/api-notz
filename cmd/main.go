@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -19,7 +20,8 @@ func main() {
 
 	initConfig()
 
-	db, err := repository.NewPostgresDB(viper.GetString("db.url"))
+	url := getDBUrl()
+	db, err := repository.NewPostgresDB(url)
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err)
 	}
@@ -62,4 +64,8 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		logrus.Fatalf("error reading config file: %s", err)
 	}
+}
+
+func getDBUrl() string {
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", viper.GetString("postgres.host"), viper.GetString("postgres.port"), viper.GetString("postgres.user"), viper.GetString("postgres.password"), viper.GetString("postgres.database"))
 }
