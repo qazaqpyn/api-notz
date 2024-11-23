@@ -2,21 +2,15 @@ package repository
 
 import (
 	"database/sql"
-	"embed"
 
 	_ "github.com/lib/pq"
-	"github.com/qazaqpyn/api-notz/internal/db/migrator"
+	migrator "github.com/qazaqpyn/api-notz/internal/db"
 	"github.com/sirupsen/logrus"
 )
 
-const migrationsDir = "internal/db/migrations"
-
-//go:embed migrations/*.sql
-var MigrationsFS embed.FS
-
 func NewPostgresDB(url string) (*sql.DB, error) {
 	// Recover Migrator
-	migrator := migrator.MustGetNewMigrator(MigrationsFS, migrationsDir)
+	migrator := migrator.MustGetNewMigrator()
 
 	db, err := sql.Open("postgres", url)
 	if err != nil {

@@ -12,12 +12,17 @@ import (
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 )
 
+const migrationsDir = "migrations"
+
+//go:embed migrations/*.sql
+var MigrationsFS embed.FS
+
 type Migrator struct {
 	srcDriver source.Driver
 }
 
-func MustGetNewMigrator(sqlFiles embed.FS, dirName string) *Migrator {
-	d, err := iofs.New(sqlFiles, dirName)
+func MustGetNewMigrator() *Migrator {
+	d, err := iofs.New(MigrationsFS, migrationsDir)
 	if err != nil {
 		panic(err)
 	}
