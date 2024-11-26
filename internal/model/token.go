@@ -7,8 +7,8 @@ import (
 )
 
 type RefreshSession struct {
-	Id        pgtype.UUID
-	UserId    pgtype.UUID
-	Token     string
-	ExpiresAt time.Time
+	Id        pgtype.UUID `json:"id,omitempty"`
+	UserId    pgtype.UUID `json:"user_id"`
+	Token     string      `json:"token"`
+	ExpiresAt time.Time   `json:"expires_at"`
 }
