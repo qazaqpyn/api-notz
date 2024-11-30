@@ -20,3 +20,8 @@ type UpdateNoteInput struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
+
+type UpdateNoteTagsInput struct {
+	Added   []pgtype.UUID
+	Deleted []pgtype.UUID
+}

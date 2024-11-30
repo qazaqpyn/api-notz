@@ -16,6 +16,7 @@ func NewTokenRepository(db *sql.DB) *TokenRepository {
 }
 
 func (r *TokenRepository) Create(ctx context.Context, token model.RefreshSession) error {
+	// Create if it doesn't exist, Update if it exists
 	return nil
 }
 
