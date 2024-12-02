@@ -65,7 +65,7 @@ func (s *AuthorizationService) CreateUser(ctx context.Context, user model.User) 
 func (s *AuthorizationService) Login(ctx context.Context, body model.LoginRequest) (string, string, error) {
 	password := generatePasswordHash(body.Password)
 
-	user, err := s.repo.GetUser(ctx, body.Username, password)
+	user, err := s.repo.GetUser(ctx, body.Email, password)
 	if err != nil {
 		return "", "", err
 	}

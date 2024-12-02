@@ -1,6 +1,11 @@
 package model
 
-import "github.com/jackc/pgx/v5/pgtype"
+import (
+	"errors"
+	"strings"
+
+	"github.com/jackc/pgx/v5/pgtype"
+)
 
 type Tag struct {
 	Id        pgtype.UUID        `json:"id,omitempty"`
@@ -11,6 +16,13 @@ type Tag struct {
 	CreatedBy pgtype.UUID        `json:"created_by"`
 }
 
-type UpdateTagInput struct {
+type TagInput struct {
 	Name string `json:"name"`
+}
+
+func (t *TagInput) Validate() error {
+	if strings.TrimSpace(t.Name) == "" {
+		return errors.New("name is empty")
+	}
+	return nil
 }

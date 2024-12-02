@@ -34,6 +34,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			notes.PUT("/:id", h.updateNote)
 			notes.DELETE("/:id", h.deleteNote)
 		}
+
+		tags := api.Group("/tags")
+		{
+			tags.GET("/", h.getAllTags)
+			tags.GET("/", h.getUserTags)
+			tags.POST("/", h.createTags)
+			tags.PUT("/:id", h.updateTag)
+			tags.DELETE("/:id", h.deleteTag)
+		}
 	}
 
 	return router
