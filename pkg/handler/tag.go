@@ -65,7 +65,7 @@ func (h *Handler) getUserTags(c *gin.Context) {
 		return
 	}
 
-	tags, err := h.services.GetUserTags(c, userId)
+	tags, err := h.services.GetUserTags(c, userId.(string))
 	if err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
 		return

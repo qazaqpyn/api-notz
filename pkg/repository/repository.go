@@ -25,10 +25,19 @@ type Token interface {
 	Get(ctx context.Context, token string) (model.RefreshSession, error)
 }
 
+type Tag interface {
+	GetAllTags(ctx context.Context) ([]*model.Tag, error)
+	CreateTags(ctx context.Context, tags *model.TagInput) ([]*model.Tag, error)
+	GetUserTags(ctx context.Context, userId string) ([]*model.Tag, error)
+	DeleteTag(ctx context.Context, tagId string) error
+	UpdateTag(ctx context.Context, tagId string, input *model.TagInput) error
+}
+
 type Repository struct {
 	Authorization
 	Note
 	Token
+	Tag
 }
 
 func NewRepository(db *sql.DB) *Repository {
@@ -36,5 +45,6 @@ func NewRepository(db *sql.DB) *Repository {
 		Authorization: NewAuthRepository(db),
 		Note:          NewNoteRepository(db),
 		Token:         NewTokenRepository(db),
+		Tag:           NewTagRepository(db),
 	}
 }

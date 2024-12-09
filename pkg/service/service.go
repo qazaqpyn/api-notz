@@ -22,14 +22,24 @@ type Note interface {
 	DeleteNote(ctx context.Context, noteId string) error
 }
 
+type Tag interface {
+	GetAllTags(ctx context.Context) ([]*model.Tag, error)
+	CreateTags(ctx context.Context, tags *model.TagInput) ([]*model.Tag, error)
+	GetUserTags(ctx context.Context, userId string) ([]*model.Tag, error)
+	UpdateTag(ctx context.Context, tagId string, input *model.TagInput) error
+	DeleteTag(ctx context.Context, tagId string) error
+}
+
 type Service struct {
 	Authorization
 	Note
+	Tag
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos),
 		Note:          NewNoteService(repos),
+		Tag:           NewTagService(repos),
 	}
 }
