@@ -23,11 +23,11 @@ type Note interface {
 }
 
 type Tag interface {
-	GetAllTags(ctx context.Context) ([]*model.Tag, error)
-	CreateTags(ctx context.Context, tags *model.TagInput) ([]*model.Tag, error)
-	GetUserTags(ctx context.Context, userId string) ([]*model.Tag, error)
-	UpdateTag(ctx context.Context, tagId string, input *model.TagInput) error
-	DeleteTag(ctx context.Context, tagId string) error
+	GetAllTags(ctx context.Context) ([]model.Tag, error)
+	CreateTags(ctx context.Context, userId string, tags []model.TagInput) error
+	GetUserTags(ctx context.Context, userId string) ([]model.Tag, error)
+	UpdateTag(ctx context.Context, userId string, tagId string, input *model.TagInput) error
+	DeleteTag(ctx context.Context, userId string, tagId string) error
 }
 
 type Service struct {

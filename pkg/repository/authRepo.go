@@ -2,16 +2,16 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/qazaqpyn/api-notz/internal/model"
 )
 
 type authRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewAuthRepository(db *sql.DB) *authRepository {
+func NewAuthRepository(db *sqlx.DB) *authRepository {
 	return &authRepository{db}
 }
 

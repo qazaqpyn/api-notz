@@ -27,7 +27,7 @@ func (h *Handler) getAllTags(c *gin.Context) {
 }
 
 func (h *Handler) createTags(c *gin.Context) {
-	_, ok := c.Get(userCtx)
+	userId, ok := c.Get(userCtx)
 	if !ok {
 		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
 		return
@@ -47,14 +47,14 @@ func (h *Handler) createTags(c *gin.Context) {
 		}
 	}
 
-	tags, err := h.services.CreateTags(c, &input)
+	err := h.services.CreateTags(c, userId.(string), input)
 	if err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
 		return
 	}
 
 	c.JSON(http.StatusCreated, map[string]interface{}{
-		"data": tags,
+		"message": "tags created successfully",
 	})
 }
 
@@ -77,7 +77,7 @@ func (h *Handler) getUserTags(c *gin.Context) {
 }
 
 func (h *Handler) updateTag(c *gin.Context) {
-	_, ok := c.Get(userCtx)
+	userId, ok := c.Get(userCtx)
 	if !ok {
 		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
 		return
@@ -96,7 +96,7 @@ func (h *Handler) updateTag(c *gin.Context) {
 		return
 	}
 
-	if err := h.services.UpdateTag(c, tagId, &input); err != nil {
+	if err := h.services.UpdateTag(c, userId.(string), tagId, &input); err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
 		return
 	}
@@ -107,14 +107,14 @@ func (h *Handler) updateTag(c *gin.Context) {
 }
 
 func (h *Handler) deleteTag(c *gin.Context) {
-	_, ok := c.Get(userCtx)
+	userId, ok := c.Get(userCtx)
 	if !ok {
 		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
 		return
 	}
 
 	tagId := c.Param("id")
-	if err := h.services.DeleteTag(c, tagId); err != nil {
+	if err := h.services.DeleteTag(c, userId.(string), tagId); err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
 		return
 	}

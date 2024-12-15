@@ -17,12 +17,23 @@ type Tag struct {
 }
 
 type TagInput struct {
-	Name string `json:"name"`
+	Name   string `json:"name"`
+	UserId string `json:"user_id,omitempty"`
+	Id     string `json:"id,omitempty"`
 }
 
 func (t *TagInput) Validate() error {
 	if strings.TrimSpace(t.Name) == "" {
 		return errors.New("name is empty")
 	}
+
 	return nil
+}
+
+func (t *TagInput) AddUserId(userId string) {
+	t.UserId = userId
+}
+
+func (t *TagInput) AddId(tagId string) {
+	t.Id = tagId
 }

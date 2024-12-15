@@ -2,16 +2,16 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/qazaqpyn/api-notz/internal/model"
 )
 
 type TokenRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewTokenRepository(db *sql.DB) *TokenRepository {
+func NewTokenRepository(db *sqlx.DB) *TokenRepository {
 	return &TokenRepository{db}
 }
 

@@ -2,16 +2,16 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/qazaqpyn/api-notz/internal/model"
 )
 
 type NoteRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewNoteRepository(db *sql.DB) *NoteRepository {
+func NewNoteRepository(db *sqlx.DB) *NoteRepository {
 	return &NoteRepository{db}
 }
 

@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/qazaqpyn/api-notz/internal/model"
 )
 
@@ -26,11 +26,12 @@ type Token interface {
 }
 
 type Tag interface {
-	GetAllTags(ctx context.Context) ([]*model.Tag, error)
-	CreateTags(ctx context.Context, tags *model.TagInput) ([]*model.Tag, error)
-	GetUserTags(ctx context.Context, userId string) ([]*model.Tag, error)
+	GetAllTags(ctx context.Context) ([]model.Tag, error)
+	CreateTags(ctx context.Context, tags []model.TagInput) error
+	GetUserTags(ctx context.Context, userId string) ([]model.Tag, error)
 	DeleteTag(ctx context.Context, tagId string) error
-	UpdateTag(ctx context.Context, tagId string, input *model.TagInput) error
+	UpdateTag(ctx context.Context, input *model.TagInput) error
+	GetByUserTagById(ctx context.Context, userId string, tagId string) (*model.Tag, error)
 }
 
 type Repository struct {
@@ -40,7 +41,7 @@ type Repository struct {
 	Tag
 }
 
-func NewRepository(db *sql.DB) *Repository {
+func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthRepository(db),
 		Note:          NewNoteRepository(db),
