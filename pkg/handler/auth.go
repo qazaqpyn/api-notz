@@ -11,9 +11,15 @@ import (
 )
 
 func (h *Handler) signUp(c *gin.Context) {
-	var input model.User
+	var input model.RegisterRequest
 
 	if err := c.BindJSON(&input); err != nil {
+		tools.RequestErrorHandler(c.Writer, err)
+		return
+	}
+
+	//validate
+	if err := input.Validate(); err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
 		return
 	}
@@ -36,6 +42,12 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
+	// validate
+	if err := input.Validate(); err != nil {
+		tools.RequestErrorHandler(c.Writer, err)
+		return
+	}
+
 	token, refreshToken, err := h.services.Login(c, input)
 	if err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
@@ -44,6 +56,10 @@ func (h *Handler) signIn(c *gin.Context) {
 	response, err := json.Marshal(map[string]string{
 		"token": token,
 	})
+	if err != nil {
+		tools.RequestErrorHandler(c.Writer, err)
+		return
+	}
 
 	c.Header("Set-Cookie", fmt.Sprintf("refresh-token=%s; HttpOnly", refreshToken))
 	c.Header("Content-Type", "application/json")
@@ -66,6 +82,10 @@ func (h *Handler) refreshTokens(c *gin.Context) {
 	response, err := json.Marshal(map[string]string{
 		"token": token,
 	})
+	if err != nil {
+		tools.RequestErrorHandler(c.Writer, err)
+		return
+	}
 
 	c.Header("Set-Cookie", fmt.Sprintf("refresh-token=%s; HttpOnly", refreshToken))
 	c.Header("Content-Type", "application/json")

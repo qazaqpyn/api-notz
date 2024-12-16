@@ -21,8 +21,6 @@ func NewPostgresDB(url string) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	defer db.Close()
-
 	// Apply migrations
 	err = migrator.ApplyMigrations(db.DB)
 	if err != nil {

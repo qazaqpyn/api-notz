@@ -8,7 +8,7 @@ import (
 )
 
 type Authorization interface {
-	CreateUser(ctx context.Context, user model.User) error
+	CreateUser(ctx context.Context, user model.RegisterRequest) error
 	Login(ctx context.Context, body model.LoginRequest) (string, string, error)
 	ParseToken(ctx context.Context, token string) (string, error)
 	RefreshTokens(ctx context.Context, token string) (string, string, error)

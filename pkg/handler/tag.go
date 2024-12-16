@@ -9,12 +9,6 @@ import (
 )
 
 func (h *Handler) getAllTags(c *gin.Context) {
-	_, ok := c.Get(userCtx)
-	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
-		return
-	}
-
 	tags, err := h.services.GetAllTags(c)
 	if err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
@@ -29,7 +23,7 @@ func (h *Handler) getAllTags(c *gin.Context) {
 func (h *Handler) createTags(c *gin.Context) {
 	userId, ok := c.Get(userCtx)
 	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
+		tools.UnAuthorizedHandler(c.Writer)
 		return
 	}
 
@@ -61,7 +55,7 @@ func (h *Handler) createTags(c *gin.Context) {
 func (h *Handler) getUserTags(c *gin.Context) {
 	userId, ok := c.Get(userCtx)
 	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
+		tools.UnAuthorizedHandler(c.Writer)
 		return
 	}
 
@@ -79,7 +73,7 @@ func (h *Handler) getUserTags(c *gin.Context) {
 func (h *Handler) updateTag(c *gin.Context) {
 	userId, ok := c.Get(userCtx)
 	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
+		tools.UnAuthorizedHandler(c.Writer)
 		return
 	}
 
@@ -109,7 +103,7 @@ func (h *Handler) updateTag(c *gin.Context) {
 func (h *Handler) deleteTag(c *gin.Context) {
 	userId, ok := c.Get(userCtx)
 	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
+		tools.UnAuthorizedHandler(c.Writer)
 		return
 	}
 

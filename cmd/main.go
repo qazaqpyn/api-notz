@@ -17,6 +17,9 @@ import (
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors: true,
+	})
 
 	initConfig()
 

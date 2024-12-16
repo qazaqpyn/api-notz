@@ -15,6 +15,7 @@ func NewHandler(services *service.Service) *Handler {
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+	router.Use(h.printRequest)
 
 	auth := router.Group("/auth")
 	{
@@ -38,7 +39,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		tags := api.Group("/tags")
 		{
 			tags.GET("/", h.getAllTags)
-			tags.GET("/", h.getUserTags)
+			tags.GET("/user", h.getUserTags)
 			tags.POST("/", h.createTags)
 			tags.PUT("/:id", h.updateTag)
 			tags.DELETE("/:id", h.deleteTag)

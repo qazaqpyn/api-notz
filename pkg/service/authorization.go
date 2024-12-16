@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/google/uuid"
 	"github.com/qazaqpyn/api-notz/internal/model"
 	"github.com/qazaqpyn/api-notz/pkg/repository"
 )
@@ -40,9 +40,13 @@ func NewAuthService(repo *repository.Repository) *AuthorizationService {
 	return &AuthorizationService{repo: repo}
 }
 
-func (s *AuthorizationService) CreateUser(ctx context.Context, user model.User) error {
+func (s *AuthorizationService) CreateUser(ctx context.Context, user model.RegisterRequest) error {
+	_, err := s.repo.GetUserByEmail(ctx, user.Email)
+	if err == nil {
+		return errors.New("user already exists")
+	}
+
 	user.Password = generatePasswordHash(user.Password)
-	user.Id = uuid.New().String()
 
 	if err := s.repo.CreateUser(ctx, user); err != nil {
 		return err
@@ -54,9 +58,13 @@ func (s *AuthorizationService) CreateUser(ctx context.Context, user model.User) 
 func (s *AuthorizationService) Login(ctx context.Context, body model.LoginRequest) (string, string, error) {
 	password := generatePasswordHash(body.Password)
 
-	user, err := s.repo.GetUser(ctx, body.Email, password)
+	user, err := s.repo.GetUserByEmail(ctx, body.Email)
 	if err != nil {
 		return "", "", err
+	}
+
+	if strings.Compare(user.Password, password) != 0 {
+		return "", "", errors.New("email or password is incorrect")
 	}
 
 	accessToken, refreshToken, err := s.GenerateTokenPair(ctx, user.Id)

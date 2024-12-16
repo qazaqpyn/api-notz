@@ -8,8 +8,8 @@ import (
 )
 
 type Authorization interface {
-	CreateUser(ctx context.Context, user model.User) error
-	GetUser(ctx context.Context, username, password string) (model.User, error)
+	CreateUser(ctx context.Context, user model.RegisterRequest) error
+	GetUserByEmail(ctx context.Context, username string) (*model.User, error)
 }
 
 type Note interface {

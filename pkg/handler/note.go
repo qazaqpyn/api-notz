@@ -9,15 +9,9 @@ import (
 )
 
 func (h *Handler) getAllNotes(c *gin.Context) {
-	_, ok := c.Get(userCtx)
-	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
-		return
-	}
-
 	notes, err := h.services.GetAllNotes(c)
 	if err != nil {
-		tools.RequestErrorHandler(c.Writer, err)
+		tools.UnAuthorizedHandler(c.Writer)
 		return
 	}
 
@@ -27,12 +21,6 @@ func (h *Handler) getAllNotes(c *gin.Context) {
 }
 
 func (h *Handler) createNote(c *gin.Context) {
-	_, ok := c.Get(userCtx)
-	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
-		return
-	}
-
 	var input model.Note
 	if err := c.BindJSON(&input); err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
@@ -51,12 +39,6 @@ func (h *Handler) createNote(c *gin.Context) {
 }
 
 func (h *Handler) getNoteById(c *gin.Context) {
-	_, ok := c.Get(userCtx)
-	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
-		return
-	}
-
 	noteId := c.Param("id")
 	note, err := h.services.GetNoteById(c, noteId)
 	if err != nil {
@@ -70,12 +52,6 @@ func (h *Handler) getNoteById(c *gin.Context) {
 }
 
 func (h *Handler) updateNote(c *gin.Context) {
-	_, ok := c.Get(userCtx)
-	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
-		return
-	}
-
 	noteId := c.Param("id")
 	var input model.UpdateNoteInput
 	if err := c.BindJSON(&input); err != nil {
@@ -94,12 +70,6 @@ func (h *Handler) updateNote(c *gin.Context) {
 }
 
 func (h *Handler) deleteNote(c *gin.Context) {
-	_, ok := c.Get(userCtx)
-	if !ok {
-		tools.RequestErrorHandler(c.Writer, UnAuthorizedError)
-		return
-	}
-
 	noteId := c.Param("id")
 	if err := h.services.DeleteNote(c, noteId); err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
