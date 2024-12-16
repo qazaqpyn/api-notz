@@ -1,19 +1,17 @@
 package model
 
-import "github.com/jackc/pgx/v5/pgtype"
-
 type Folder struct {
-	Id        pgtype.UUID        `json:"id,omitempty"`
-	Name      string             `json:"name"`
-	ParentId  pgtype.UUID        `json:"parent_id"`
-	IsRoot    bool               `json:"is_root"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	DeleteAt  pgtype.Timestamptz `json:"delete_at,omitempty"`
-	CreatedBy pgtype.UUID        `json:"created_by"`
+	Id        string `json:"id,omitempty"`
+	Name      string `json:"name"`
+	ParentId  string `json:"parent_id"`
+	IsRoot    bool   `json:"is_root"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+	DeleteAt  string `json:"delete_at,omitempty"`
+	CreatedBy string `json:"created_by"`
 }
 
 type UpdateFolder struct {
-	Name     string      `json:"name"`
-	ParentId pgtype.UUID `json:"parent_id"`
+	Name     string `json:"name"`
+	ParentId string `json:"parent_id"`
 }

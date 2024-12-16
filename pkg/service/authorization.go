@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 	"github.com/qazaqpyn/api-notz/internal/model"
 	"github.com/qazaqpyn/api-notz/pkg/repository"
 )
@@ -20,7 +20,7 @@ type AuthorizationService struct {
 
 type TokenClaim struct {
 	jwt.StandardClaims
-	UserId pgtype.UUID `json:"userId"`
+	UserId string `json:"userId"`
 }
 
 const (
@@ -28,17 +28,6 @@ const (
 	salt       = "gloryToKazakhstan"
 	signingKey = "gloryToKazakhstan"
 )
-
-func UUIDToString(myUUID pgtype.UUID) string {
-	return fmt.Sprintf("%x-%x-%x-%x-%x", myUUID.Bytes[0:4], myUUID.Bytes[4:6], myUUID.Bytes[6:8], myUUID.Bytes[8:10], myUUID.Bytes[10:16])
-}
-
-func StringToUUID(myString string) pgtype.UUID {
-	var myUUID pgtype.UUID
-	fmt.Sscanf(myString, "%x-%x-%x-%x-%x", myUUID.Bytes[0:4], myUUID.Bytes[4:6], myUUID.Bytes[6:8], myUUID.Bytes[8:10], myUUID.Bytes[10:16])
-
-	return myUUID
-}
 
 func generatePasswordHash(password string) string {
 	hash := sha256.New()
@@ -53,7 +42,7 @@ func NewAuthService(repo *repository.Repository) *AuthorizationService {
 
 func (s *AuthorizationService) CreateUser(ctx context.Context, user model.User) error {
 	user.Password = generatePasswordHash(user.Password)
-	user.Id = pgtype.UUID{}
+	user.Id = uuid.New().String()
 
 	if err := s.repo.CreateUser(ctx, user); err != nil {
 		return err
@@ -78,9 +67,9 @@ func (s *AuthorizationService) Login(ctx context.Context, body model.LoginReques
 	return accessToken, refreshToken, nil
 }
 
-func (s *AuthorizationService) GenerateTokenPair(ctx context.Context, userId pgtype.UUID) (string, string, error) {
+func (s *AuthorizationService) GenerateTokenPair(ctx context.Context, userId string) (string, string, error) {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Subject:   UUIDToString(userId),
+		Subject:   userId,
 		IssuedAt:  time.Now().Unix(),
 		ExpiresAt: time.Now().Add(tokenTTL).Unix(),
 	})
@@ -90,7 +79,7 @@ func (s *AuthorizationService) GenerateTokenPair(ctx context.Context, userId pgt
 		return "", "", err
 	}
 
-	refreshToken, err := t.SignedString([]byte(signingKey))
+	refreshToken, err := newRefreshToken()
 	if err != nil {
 
 		return "", "", err
@@ -110,7 +99,7 @@ func (s *AuthorizationService) GenerateTokenPair(ctx context.Context, userId pgt
 func (s *AuthorizationService) ParseToken(ctx context.Context, token string) (string, error) {
 	t, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("invalid token")
+			return nil, errors.New("invalid token")
 		}
 
 		return []byte(salt), nil
@@ -121,17 +110,17 @@ func (s *AuthorizationService) ParseToken(ctx context.Context, token string) (st
 	}
 
 	if !t.Valid {
-		return "", fmt.Errorf("invalid token")
+		return "", errors.New("invalid token")
 	}
 
 	claims, ok := t.Claims.(jwt.MapClaims)
 	if !ok {
-		return "", fmt.Errorf("invalid token")
+		return "", errors.New("invalid token")
 	}
 
 	id, ok := claims["sub"].(string)
 	if !ok {
-		return "", fmt.Errorf("invalid token")
+		return "", errors.New("invalid token")
 	}
 
 	return id, nil

@@ -1,19 +1,17 @@
 package model
 
-import "github.com/jackc/pgx/v5/pgtype"
-
 type Note struct {
-	Id         pgtype.UUID        `json:"id,omitempty"`
-	Title      string             `json:"title"`
-	Body       string             `json:"body"`
-	Summary    string             `json:"summary"`
-	Transcript string             `json:"transcript"`
-	CreatedAt  pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
-	DeleteAt   pgtype.Timestamptz `json:"delete_at,omitempty"`
-	CreatedBy  pgtype.UUID        `json:"created_by"`
-	UpdatedBy  pgtype.UUID        `json:"updated_by"`
-	DeletedBy  pgtype.UUID        `json:"deleted_by,omitempty"`
+	Id         string `json:"id,omitempty"`
+	Title      string `json:"title"`
+	Body       string `json:"body"`
+	Summary    string `json:"summary"`
+	Transcript string `json:"transcript"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at"`
+	DeleteAt   string `json:"delete_at,omitempty"`
+	CreatedBy  string `json:"created_by"`
+	UpdatedBy  string `json:"updated_by"`
+	DeletedBy  string `json:"deleted_by,omitempty"`
 }
 
 type UpdateNoteInput struct {
@@ -22,6 +20,6 @@ type UpdateNoteInput struct {
 }
 
 type UpdateNoteTagsInput struct {
-	Added   []pgtype.UUID
-	Deleted []pgtype.UUID
+	Added   []string
+	Deleted []string
 }
