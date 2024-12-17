@@ -3,21 +3,27 @@ package model
 import (
 	"errors"
 	"strings"
+
+	"github.com/lib/pq"
 )
 
 type Tag struct {
-	Id        string `json:"id,omitempty"`
-	Name      string `json:"name"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-	DeleteAt  string `json:"delete_at,omitempty"`
-	CreatedBy string `json:"created_by"`
+	Id        string      `json:"id,omitempty" db:"id"`
+	Name      string      `json:"name" db:"name"`
+	CreatedAt string      `json:"createdAt" db:"created_at"`
+	UpdatedAt string      `json:"updatedAt" db:"updated_at"`
+	DeleteAt  pq.NullTime `json:"deleteAt,omitempty" db:"deleted_at"`
+	CreatedBy string      `json:"createdBy" db:"created_by"`
 }
 
 type TagInput struct {
-	Name   string `json:"name"`
-	UserId string `json:"user_id,omitempty"`
-	Id     string `json:"id,omitempty"`
+	Name   string `json:"name" db:"name"`
+	UserId string `json:"userId,omitempty" db:"user_id"`
+	Id     string `json:"id,omitempty" db:"id"`
+}
+
+type TagsInput struct {
+	Names []string `json:"names"`
 }
 
 func (t *TagInput) Validate() error {

@@ -52,7 +52,7 @@ func (t *TagService) UpdateTag(ctx context.Context, userId string, tagId string,
 }
 
 func (t *TagService) addUserIdToInput(tags []model.TagInput, userId string) {
-	for _, it := range tags {
-		it.AddUserId(userId)
+	for idx := range tags {
+		tags[idx].AddUserId(userId)
 	}
 }

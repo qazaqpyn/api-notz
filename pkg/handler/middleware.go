@@ -21,7 +21,6 @@ func (h *Handler) authorizarion(c *gin.Context) {
 		c.Abort()
 		return
 	}
-
 	headerParts := strings.Split(authHeader, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
 		tools.UnAuthorizedHandler(c.Writer)

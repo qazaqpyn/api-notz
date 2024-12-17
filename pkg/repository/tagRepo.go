@@ -18,7 +18,7 @@ func NewTagRepository(db *sqlx.DB) *TagRepository {
 
 func (t *TagRepository) GetAllTags(ctx context.Context) ([]model.Tag, error) {
 	tags := []model.Tag{}
-	err := t.db.SelectContext(ctx, tags, "SELECT * FROM tags ORDER BY updated_by")
+	err := t.db.SelectContext(ctx, &tags, "SELECT * FROM tags ORDER BY updated_at")
 	if err != nil {
 		return nil, err
 	}
@@ -37,20 +37,20 @@ func (t *TagRepository) CreateTags(ctx context.Context, tags []model.TagInput) e
 
 func (t *TagRepository) GetUserTags(ctx context.Context, userId string) ([]model.Tag, error) {
 	tags := []model.Tag{}
-	user := map[string]string{
-		"user": userId,
+	user := map[string]interface{}{
+		"user_id": userId,
 	}
 
 	nstmt, err := t.db.PrepareNamedContext(ctx, `
 		SELECT * FROM tags
 		WHERE created_by = :user_id
-		ORDER BY updated_by
+		ORDER BY updated_at
 	`)
 	if err != nil {
 		return nil, err
 	}
 
-	err = nstmt.Select(tags, user)
+	err = nstmt.Select(&tags, user)
 
 	return tags, err
 }
@@ -67,11 +67,10 @@ func (t *TagRepository) GetByUserTagById(ctx context.Context, userId string, tag
 		return nil, err
 	}
 
-	err = nstmt.Select(&tag, map[string]interface{}{
-		"UserId": userId,
-		"Id":     tagId,
+	err = nstmt.Get(&tag, map[string]interface{}{
+		"user_id": userId,
+		"id":      tagId,
 	})
-
 	return &tag, err
 }
 

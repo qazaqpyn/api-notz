@@ -112,7 +112,6 @@ func (s *AuthorizationService) ParseToken(ctx context.Context, token string) (st
 
 		return []byte(salt), nil
 	})
-
 	if err != nil {
 		return "", err
 	}

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -53,17 +52,12 @@ func (h *Handler) signIn(c *gin.Context) {
 		tools.RequestErrorHandler(c.Writer, err)
 		return
 	}
-	response, err := json.Marshal(map[string]string{
-		"token": token,
-	})
-	if err != nil {
-		tools.RequestErrorHandler(c.Writer, err)
-		return
-	}
 
 	c.Header("Set-Cookie", fmt.Sprintf("refresh-token=%s; HttpOnly", refreshToken))
 	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"token": token,
+	})
 }
 
 func (h *Handler) refreshTokens(c *gin.Context) {
@@ -79,15 +73,9 @@ func (h *Handler) refreshTokens(c *gin.Context) {
 		return
 	}
 
-	response, err := json.Marshal(map[string]string{
-		"token": token,
-	})
-	if err != nil {
-		tools.RequestErrorHandler(c.Writer, err)
-		return
-	}
-
 	c.Header("Set-Cookie", fmt.Sprintf("refresh-token=%s; HttpOnly", refreshToken))
 	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, map[string]string{
+		"token": token,
+	})
 }

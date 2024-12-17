@@ -27,15 +27,19 @@ func (h *Handler) createTags(c *gin.Context) {
 		return
 	}
 
-	var input []model.TagInput
-	if err := c.BindJSON(&input); err != nil {
+	var names model.TagsInput
+	if err := c.BindJSON(&names); err != nil {
 		tools.RequestErrorHandler(c.Writer, err)
 		return
 	}
 
+	input := make([]model.TagInput, len(names.Names))
 	// validate input fields
-	for _, value := range input {
-		if err := value.Validate(); err != nil {
+	for idx, value := range names.Names {
+		input[idx] = model.TagInput{
+			Name: value,
+		}
+		if err := input[idx].Validate(); err != nil {
 			tools.RequestErrorHandler(c.Writer, err)
 			return
 		}
