@@ -3,17 +3,15 @@ package model
 import (
 	"errors"
 	"strings"
-
-	"github.com/lib/pq"
 )
 
 type Tag struct {
-	Id        string      `json:"id,omitempty" db:"id"`
-	Name      string      `json:"name" db:"name"`
-	CreatedAt string      `json:"createdAt" db:"created_at"`
-	UpdatedAt string      `json:"updatedAt" db:"updated_at"`
-	DeleteAt  pq.NullTime `json:"deleteAt,omitempty" db:"deleted_at"`
-	CreatedBy string      `json:"createdBy" db:"created_by"`
+	Id        string  `json:"id,omitempty" db:"id"`
+	Name      string  `json:"name" db:"name"`
+	CreatedAt string  `json:"createdAt" db:"created_at"`
+	UpdatedAt string  `json:"updatedAt" db:"updated_at"`
+	DeleteAt  *string `json:"deleteAt,omitempty" db:"deleted_at"`
+	CreatedBy string  `json:"createdBy" db:"created_by"`
 }
 
 type TagInput struct {

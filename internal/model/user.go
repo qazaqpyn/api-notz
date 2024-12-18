@@ -3,19 +3,18 @@ package model
 import (
 	"errors"
 
-	"github.com/lib/pq"
 	"github.com/qazaqpyn/api-notz/internal/tools"
 )
 
 type User struct {
-	Id        string      `json:"id,omitempty" db:"id"`
-	FirstName string      `json:"firstName" db:"first_name"`
-	LastName  string      `json:"lastName" db:"last_name"`
-	Email     string      `json:"email" binding:"required" db:"email"`
-	Password  string      `json:"password" db:"password"`
-	CreatedAt string      `json:"createdAt" db:"created_at"`
-	UpdatedAt string      `json:"updatedAt" db:"updated_at"`
-	DeleteAt  pq.NullTime `json:"deleteAt,omitempty" db:"deleted_at"`
+	Id        string  `json:"id,omitempty" db:"id"`
+	FirstName string  `json:"firstName" db:"first_name"`
+	LastName  string  `json:"lastName" db:"last_name"`
+	Email     string  `json:"email" binding:"required" db:"email"`
+	Password  string  `json:"password" db:"password"`
+	CreatedAt string  `json:"createdAt" db:"created_at"`
+	UpdatedAt string  `json:"updatedAt" db:"updated_at"`
+	DeleteAt  *string `json:"deleteAt,omitempty" db:"deleted_at"`
 }
 
 type RegisterRequest struct {

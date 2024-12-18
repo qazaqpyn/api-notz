@@ -18,7 +18,11 @@ func NewTagRepository(db *sqlx.DB) *TagRepository {
 
 func (t *TagRepository) GetAllTags(ctx context.Context) ([]model.Tag, error) {
 	tags := []model.Tag{}
-	err := t.db.SelectContext(ctx, &tags, "SELECT * FROM tags ORDER BY updated_at")
+	err := t.db.SelectContext(ctx, &tags, `
+		SELECT * FROM tags 
+		WHERE deleted_at IS NULL
+		ORDER BY updated_at
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -44,6 +48,7 @@ func (t *TagRepository) GetUserTags(ctx context.Context, userId string) ([]model
 	nstmt, err := t.db.PrepareNamedContext(ctx, `
 		SELECT * FROM tags
 		WHERE created_by = :user_id
+			AND deleted_at IS NULL
 		ORDER BY updated_at
 	`)
 	if err != nil {
